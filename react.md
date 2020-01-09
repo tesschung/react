@@ -889,6 +889,17 @@ static getDerivedStateFromProps(nextProps, prevState) {
 
 ### **리액트 작업환경 직접 설정하기**
 
+MacOS에서 
+
+- nvm으로 설치
+  - https://gist.github.com/falsy/8aa42ae311a9adb50e2ca7d8702c9af1
+- nvm install --lts 설치
+- npm 이 설치된다. 버전관리 등에 사용되는 도구
+- yarn도 똑같음 yarn 사용 권장 (더 빠르다)
+- 
+
+
+
 
 
 
