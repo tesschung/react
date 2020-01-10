@@ -894,11 +894,52 @@ MacOS에서
 - nvm으로 설치
   - https://gist.github.com/falsy/8aa42ae311a9adb50e2ca7d8702c9af1
 - nvm install --lts 설치
+- node는 v8이상이여야 한다.
+
+```bash
+$ node -v
+v12.14.1
+```
+
+
+
 - npm 이 설치된다. 버전관리 등에 사용되는 도구
 - yarn도 똑같음 yarn 사용 권장 (더 빠르다)
-- 
+
+```bash
+$ brew install yarn
+
+$ brew install yarn --without-node
+
+$ yarn -v
+1.21.1
+```
 
 
+
+- webpack, webpack-dev-server, babel 설치
+
+```bash
+$ npm install -g babel webpack webpack-dev-server
+```
+
+
+
+- 리액트 home 프로젝트 생성
+
+```bash
+$ create-react-app home
+```
+
+
+
+- 프로젝트 시작
+
+```bash
+$ yarn start
+```
+
+<img src="react.assets/image-20200109234025541.png" alt="image-20200109234025541" style="zoom:50%;" />
 
 
 
