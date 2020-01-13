@@ -64,7 +64,6 @@ class App extends Component {
     const { information } = this.state;
     return (
       <div className="APP"> 
-        <Notifier offline={this.state.offline} />
         <header className="App-header">
         </header>
         <PhoneForm onCreate={this.handleCreate} />

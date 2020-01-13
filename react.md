@@ -1214,7 +1214,16 @@ const squared = numbers.map(n => n*n)
 
 - .slice 혹은 .filter
 
+
+
 - .slice
+
+```js
+const numbers = [1,2,3,4,5];
+numbers.slice(0,2); // [1,2]
+```
+
+
 
 
 
