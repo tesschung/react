@@ -14,6 +14,8 @@ class PhoneInfoList extends Component {
         // onRemove값을 props로 받아온다.
         const { data, onRemove, onUpdate } = this.props;
         
+        console.log('rendering list');
+
         const list = data.map(
             // data안에 있는 info 값을 PhoneInfo component한테 전달
             info => (

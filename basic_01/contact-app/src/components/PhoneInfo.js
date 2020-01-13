@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 class PhoneInfo extends Component {
     static defaultProps = {
         info: {
-            name: 'name',
+            name: '아무개',
             phone: '010-0000-0000',
             id: 0
         },
@@ -20,16 +20,52 @@ class PhoneInfo extends Component {
         phone: '',
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        // this.state와 nextState가 다른 경우
+        // return true
+        if (this.state !== nextState) {
+            return true;
+        }
+        // 그 외
+        // props로 받아오던 info값이 달라진 경우
+        return this.props.info !== nextProps.info;
+        // state값도 똑같고, info값도 똑같은 경우 render함수를 다시 호출하지 않는다.
+        // 그래서 성능최적화
+    }
+
+    
     handleRemove = () => {
         // 삭제 버튼이 클릭되면 onRemove에 id를 넣어서 호출
+        // props로 받아온 id를 전달
         const { info, onRemove } = this.props;
         // console.log(onRemove, info.id)
         onRemove(info.id);
     }
 
-    // editing 값을 반전시키는 함수입니다
+    // editing 값을 반전시키는 함수
     // true -> false, false -> true
     handleToggleEdit = () => {
+        // true -> false
+        // onUpdate 를 사용해서 부모 컴포넌트에게 알림
+
+
+        // false -> true
+        // state에 info 값들 넣어주기
+        const { info, onUpdate } = this.props;
+        if (this.state.editing){
+            // editing이 true인 상태라면
+            // onUpdate에 id값을 넣어준다.
+            onUpdate(info.id, {
+                name: this.state.name,
+                phone: this.state.phone
+            })
+        } else {
+            this.setState({
+                // 기존 값을 입력란에 넣은 상태로 수정할 수 있도록 한다.
+                name: info.name,
+                phone: info.phone,
+            })
+        }
         const { editing } = this.state;
         this.setState({ editing: !editing });
     }
@@ -68,15 +104,20 @@ class PhoneInfo extends Component {
     }
 
     render() {
+        const { editing } = this.state;
+        const { name, phone } = this.props.info;
+
+
         const style = {
             border: '1px solid black',
             padding: '8px',
             margin: '8px'
         };
 
-        const { editing } = this.state;
 
+        console.log(name);
 
+        // ? => true : => flase
         if (editing) { // 수정모드
             return (
                 <div style={style}>
@@ -104,9 +145,6 @@ class PhoneInfo extends Component {
 
 
         // 일반모드
-        const {
-            name, phone
-        } = this.props.info;
 
         return (
             <div style={style}>

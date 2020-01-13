@@ -1212,6 +1212,10 @@ const squared = numbers.map(n => n*n)
 
 ### 배열에서 데이터 제거하기 :: 데이터 삭제 및 수정
 
+### 제거
+
+
+
 - .slice 혹은 .filter
 
 
@@ -1221,20 +1225,30 @@ const squared = numbers.map(n => n*n)
 ```js
 const numbers = [1,2,3,4,5];
 numbers.slice(0,2); // [1,2]
+numbers.slice(0,2).concat(numbers.slice(3,5))
+// [1,2]+[4,5]
+// [1,2,4,5]
+
+
+// spread 문법
+[
+  ...numbers.slice(0,2);
+  10, 
+  ...numbers.slice(3,5)
+]
+// [1,2,10,4,5]
 ```
 
 
 
-
-
-
-
-
-
 - .filter
+  - 데이터 제거시 더 편하다
 
 ```js
 array.filter(num => num !== 3);
+// [1,2,4,5]
+// num이 3이 아닌것들만 filter한다
+// 불변성을 지키면서 배열 업데이트 가능
 ```
 
 
@@ -1251,12 +1265,45 @@ array.filter(num => num !== 3);
 
 
 
+### 수정
+
+.slice
+
+```js
+const numbers = [1,2,3,4,5];
+[
+  ...numbers.slice(0,2),
+  9,
+  ...numbers.slice(3,5)
+]
+//[1,2,9,4,5]
+```
+
+
+
+.map
+
+```js
+// 
+numbers.map(n => {
+  if (n == 3) {
+    return 9;
+  } else if {
+    return numbers
+  }
+})
+```
+
+
+
+
+
 
 
 - 전화번호 정보 수정 기능 구현
-- handleUpdate 함수를 만든다
+- `handleUpdate` 함수를 만든다
 - 이 함수는 id와 data라는 파라미터를 받아와서 필요한 정보를 업데이트 한다
-- handelUpdate는 PhoneInfoList의 onUpdate로 전달한다.
+- handleUpdate는 PhoneInfoList의 onUpdate로 전달한다.
 - PhoneInfoList 컴포넌트를 업데이트 한다.
 - 데이터를 컴포넌트로 렌더링하는 과정에서 PhoneInfo에 onUpdate를 그대로 전달해주었다.
 - 그럼 이제는 PhoneInfo 컴포넌트를 업데이트 해줄 것 
@@ -1265,18 +1312,82 @@ array.filter(num => num !== 3);
 
 
 
+### shouldComponentUpdate 를 통한 최적화. 불변성을 왜 유지하는가?
+
+ 
+
+render이 발생해서 변화되지 않는 값이 영향을 받지 않도록 하기 위해서 성능최적화를 한다. (scu (shortcut))
+
+shouldComponentUpdate
+
+을 사용하여 변경될 값만 작동한다.
+
+그래서 값이 수정되었을때 전체 값이 rendering이 되지않는다.
 
 
 
 
 
+```js
+const array = [0,1,2];
+const anotherArray = array;
+array.push(3)
+anotherArray // [0,1,2,3]
+array // [0,1,2,3]
+//anotherArray === array // true가 되어버린다.
+```
+
+이를 방지하기 위해서 하기와 같이 참조형식으로 만들지 않는다.
+
+```js
+const array = [0, 1, 2];
+const anotherArray = [...array, 3]; 
+const anotherArray = array.concat(4); 
+
+const object = { a:1 }
+const anotherObject = { ...object, c:3 }
+```
 
 
 
+배열 또는 문자열에 IndexOf() 사용한 특정 문자 검색
+
+```js
+data={information.filter(
+      info => info.name.indexOf(this.state.keyword) > -1
+)} 
+```
+
+> ! -1이 의미하는 것 
+>
+> 여기서는 -1을 확인값으로 사용하였는데 그 이유는 만약에 특정 문자열이 해당하는 텍스트 안에서 찾았다면 if 문에서 절대 -1이 될 수 없는 0 이상의 양수 값. 그래서 -1은 값이 없음을 의미
+
+
+
+### Ref 를 통하여 DOM 에 직접 접근하기
+
+> Ref
+
+dom 에 직접적으로 접근하는 것 
+
+Ref!
+
+
+### 후에 공부할 것
+
+prettier 다운
+
+컴포넌트 스타일링
+
+불변성 유지시 immutable.js library 사용할 것
+
+리덕스 데이터 업데이트 로직을 다른 파일로 분리시키고, 프로젝트 자체 구조를 정리하면서 체계적으로 작성 할 수 있게끔 해준다
+
+mob x library를 사용할 것
+
+리액트 라우터 v4를 배워서 여러 페이지를 가진 웹앱을 구성할 것
 
 
 ### PWA 사용
-
-
 
 https://dev.to/ore/building-an-offline-pwa-camera-app-with-react-and-cloudinary-5b9k
