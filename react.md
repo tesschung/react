@@ -945,5 +945,329 @@ $ yarn start
 
 
 
+설정을 customizing을 해야하는 경우
+
+terminal에서 
+
+yarn eject
+
+-> y
+
+해서 config파일이 앱에 생긴것을 확인 할 수  있음
 
 
+
+
+
+### Input 상태 관리하기
+
+
+
+
+
+Component directory를 만들어서 안에 작업하면된다.
+
+extensions에 Reactjs code snippets을 다운받으면 자동완성이 쉬움
+
+rcc -> 클래스형태의 컴포넌트
+
+rsc -> 함수형태의 컴포넌트 
+
+
+
+깔고나면 그냥 app.js 에서 자식 컴포넌트를 불러오는걸 div안에서 사용할때
+
+맨위에서 자동으로 import해줘서 매우 편리 
+
+
+
+자식 컴포넌트에서
+
+input같은 경우 state의 기본값이 될 것을 설정해주고
+
+setState를 해주고
+
+render하는 걸 해주고
+
+
+
+```js
+import React, { Component } from 'react';
+
+class PhoneForm extends Component {
+    state = {
+        name: '',
+        phone: '',
+    }
+    // handlechange 에 e 라는 event객체를 input의 객체로서 받는다.
+    // 값은 e.target.value로 꺼낸다
+		// [e.target.name] :  새로들어오는 값
+		// 을 하여 각 state 의 값을 바꿔준다.
+    handleChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value,
+            [e.target.phone]: e.target.value
+        })
+    };
+
+    render() {
+        return (
+            <form>
+          			// 이를 위해서 name을 정해줘야 한다.
+                <input 
+                name="name"
+                placeholder="name" 
+                onChange={this.handleChange} 
+                value={this.state.name} />
+                <input 
+                name="phone"
+                placeholder="phone number" 
+                onChange={this.handleChange} 
+                value={this.state.phone} />
+                <div>
+                    <p>{this.state.name}</p>
+                    <p>{this.state.phone}</p>
+                </div>
+            </form>
+        );
+    }
+}
+
+export default PhoneForm;
+```
+
+
+
+
+
+
+
+### 배열에 데이터 삽입하기
+
+자식컴포넌트가 부모한테 값 전달하기
+
+
+
+![image-20200111140932852](react.assets/image-20200111140932852.png)
+
+
+
+
+
+App.js
+
+```js
+import React, { Component } from 'react';
+import PhoneForm from './components/PhoneForm';
+
+
+class App extends Component {
+  id = 0;
+
+  // 배열 다루기
+  // 리액트에서는 불변성을 반드시 유지해야한다
+  // 어떤 값을 수정해야할때 setState를 반드시 사용
+  // 내부의 배열이나 객체를 바꿀 경우에는 기존 배열을 수정하지 않고
+  // 그걸 기반으로 새로 배열이나 객체를 만들어서 바꿔야 한다.
+  // **concat**을 사용하여 기존에 있는건을 수정하지 않고 새로운 배열을 만든다
+  state = {
+    information: [],
+  }
+
+  handleCreate = (data) => {
+    // 비구조 할당 문법
+    const { information } = this.state;
+    console.log(data);
+
+    this.setState({
+      // 세번째 방법
+      // Object.assign() 메소드는 열거할 수 있는 하나 이상의 출처 객체로부터 대상 객체로 속성을 복사할 때 사용합니다. 대상 객체를 반환합니다.
+      information: information.concat(Object.assign({}, data, {
+        id: this.id++
+      }))
+      // 두번째 방법
+      // information: information.concat({
+      //   // ...data, // 첫 번째 방법
+      //   name: data.name,
+      //   phone: data.phone,
+      //   id: this.id++
+      // })
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <PhoneForm onCreate={this.handleCreate} />
+        {JSON.stringify(this.state.information)}
+      </div>
+    );
+  }
+}
+
+export default App;
+
+```
+
+
+
+
+
+
+
+Phone.js
+
+```js
+import React, { Component } from 'react';
+
+class PhoneForm extends Component {
+    state = {
+        name: '',
+        phone: '',
+    }
+
+    // handlechange 에 e 라는 event객체를 input의 객체로서 받는다.
+    // 값은 e.target.value로 꺼낸다
+    handleChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value,
+            [e.target.phone]: e.target.value
+        })
+    };
+    
+    handleSubmit = (e) => {
+        // 값이 아무것도 안들어오면 submit되지 않도록 한다
+        // page가 reloading 되는 것을 방지해주기 위해 e.preventDefault() 를 호출
+        e.preventDefault();
+
+        this.props.onCreate({
+            name: this.state.name,
+            phone: this.state.phone
+        });
+
+        this.setState({
+            name: '',
+            phone: ''
+        })
+    } 
+    // onSubmit -> handleSubmit -> onCreate -> handleCreate
+    render() {
+        return (
+            <form onSubmit={this.handleSubmit}>
+                <input 
+                name="name"
+                placeholder="name" 
+                onChange={this.handleChange} 
+                value={this.state.name} 
+                />
+                <input 
+                name="phone"
+                placeholder="phone number" 
+                onChange={this.handleChange} 
+                value={this.state.phone} 
+                />
+
+                <button type="submit">등록</button>
+                
+            </form>
+        );
+    }
+}
+
+export default PhoneForm;
+```
+
+
+
+
+
+
+
+
+
+### 배열 렌더링하기
+
+- js 배열 내장함수 map
+
+map()
+
+- 배열을 특정 함수를 사용하여 전체적으로 변화를 주고 싶은 경우 
+
+```js
+const number = [1,2,3,4,5];
+
+const squared = numbers.map(n => n*n)
+// squared = [1,4,9,16,25]
+```
+
+
+
+**배열 rendering하는 고유한 키가 반드시 있어야 한다.**
+
+키는 내부적으로 제거, 업데이트, 추가를 효율적으로 하기 위해 사용되는 값이다.
+
+
+
+
+
+### 배열에서 데이터 제거하기 :: 데이터 삭제 및 수정
+
+- .slice 혹은 .filter
+
+- .slice
+
+
+
+
+
+
+
+- .filter
+
+```js
+array.filter(num => num !== 3);
+```
+
+
+
+
+
+- 전화정보를 데이터에서 제외시키는 기능 구현
+- id를 파라미터로 받아오는 handleRemove라는 함수를 만들어서 PhoneInfoList로 전달한다.
+- phoneInfoList에서는 props로 전달받은 onRemove를 그대로 전달한다.
+- 이 함수가 전달되지 않았을 경우를 대비하여 props를 위한 defaultProps도 설정한다.
+- 그다음에 PhoneInfo 쪽에서 삭제 기능을 구현한다. 삭제 버튼을 만들어서 해당 버튼에 이벤트를 설정한다.
+
+
+
+
+
+
+
+- 전화번호 정보 수정 기능 구현
+- handleUpdate 함수를 만든다
+- 이 함수는 id와 data라는 파라미터를 받아와서 필요한 정보를 업데이트 한다
+- handelUpdate는 PhoneInfoList의 onUpdate로 전달한다.
+- PhoneInfoList 컴포넌트를 업데이트 한다.
+- 데이터를 컴포넌트로 렌더링하는 과정에서 PhoneInfo에 onUpdate를 그대로 전달해주었다.
+- 그럼 이제는 PhoneInfo 컴포넌트를 업데이트 해줄 것 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### PWA 사용
+
+
+
+https://dev.to/ore/building-an-offline-pwa-camera-app-with-react-and-cloudinary-5b9k

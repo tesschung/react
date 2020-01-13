@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PhoneForm from './components/PhoneForm';
 import PhoneInfoList from './components/PhoneInfoList';
 
-
 class App extends Component {
+
   id = 0;
 
   // 배열 다루기
@@ -63,7 +63,10 @@ class App extends Component {
   render() {
     const { information } = this.state;
     return (
-      <div>
+      <div className="APP"> 
+        <Notifier offline={this.state.offline} />
+        <header className="App-header">
+        </header>
         <PhoneForm onCreate={this.handleCreate} />
         {JSON.stringify(information)}
         <PhoneInfoList 
