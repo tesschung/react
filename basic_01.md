@@ -28,7 +28,6 @@ Angular
 React
 
 - component에 집중되어있음
-
 - 데이터를 조립해서 보여준다
 
 
